@@ -1,8 +1,0 @@
-.vscode/
-.gitkeep
-
-# Ignore ROS workspace files
-install/
-log/
-build/
-
