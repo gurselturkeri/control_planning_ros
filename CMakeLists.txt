@@ -8,7 +8,18 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(nav_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+
+include_directories(include)
+
+add_executable(occupancy_map src/occupancy_map.cpp)
+ament_target_dependencies(occupancy_map rclcpp nav_msgs std_msgs)
+
+
+install(TARGETS
+  occupancy_map
+  DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
