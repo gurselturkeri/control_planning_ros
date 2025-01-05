@@ -1,45 +1,38 @@
 #include "rclcpp/rclcpp.hpp"
-#include "yaml-cpp/yaml.h"
-#include <string>
-#include <iostream>
+#include "vehicle_dimensions.hpp"
 
-class ControlNode : public rclcpp::Node
-{
+class VehicleInfo : public rclcpp::Node {
 public:
-    ControlNode() : Node("control_node")
-    {
-        // Load the configuration file path
-        std::string config_file = this->declare_parameter<std::string>("config_path", "config/robot_dimensions.yaml");
+    VehicleInfo() : Node("vehicle_info") {
+        VehicleDimensions vehicle(this);
 
-        // Parse the YAML file
-        YAML::Node config = YAML::LoadFile(config_file);
-
-        // Access robot dimensions
-        auto base = config["robot_dimensions"]["base"];
-        double base_length = base["length"].as<double>();
-        double base_width = base["width"].as<double>();
-        double base_height = base["height"].as<double>();
-
+        BaseDimensions base = vehicle.getBaseDimensions();
         RCLCPP_INFO(this->get_logger(), "Base Dimensions: length=%.2f, width=%.2f, height=%.2f",
-                    base_length, base_width, base_height);
+                    base.length, base.width, base.height);
 
-        // Access wheel positions
-        auto wheels = config["robot_dimensions"]["wheels"]["positions"];
-        double front_left_x = wheels["front_left"]["x"].as<double>();
-        double front_left_y = wheels["front_left"]["y"].as<double>();
-        double front_left_z = wheels["front_left"]["z"].as<double>();
+        WheelSpecs wheels = vehicle.getWheelSpecs();
+        RCLCPP_INFO(this->get_logger(), "Wheel Specs: radius=%.2f, thickness=%.2f",
+                    wheels.radius, wheels.thickness);
 
         RCLCPP_INFO(this->get_logger(), "Front Left Wheel Position: x=%.2f, y=%.2f, z=%.2f",
-                    front_left_x, front_left_y, front_left_z);
+                    wheels.front_left.x, wheels.front_left.y, wheels.front_left.z);
 
-        // Use these values in your control logic...
+        RCLCPP_INFO(this->get_logger(), "Wheelbase: %.2f, Track Width: %.2f",
+                    vehicle.getWheelbase(), vehicle.getTrackWidth());
+
+        CameraSpecs camera = vehicle.getCameraSpecs();
+        RCLCPP_INFO(this->get_logger(), "Camera: height=%.2f, forward_offset=%.2f",
+                    camera.height, camera.forward_offset);
+
+        LidarSpecs lidar = vehicle.getLidarSpecs();
+        RCLCPP_INFO(this->get_logger(), "Lidar: height=%.2f, forward_offset=%.2f",
+                    lidar.height, lidar.forward_offset);
     }
 };
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<ControlNode>());
+    rclcpp::spin(std::make_shared<VehicleInfo>());
     rclcpp::shutdown();
     return 0;
 }

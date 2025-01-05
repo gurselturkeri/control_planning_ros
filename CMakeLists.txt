@@ -10,14 +10,20 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
 
 include_directories(include)
 
 add_executable(occupancy_map src/occupancy_map.cpp)
-ament_target_dependencies(occupancy_map rclcpp nav_msgs std_msgs)
+ament_target_dependencies(occupancy_map rclcpp nav_msgs std_msgs tf2_ros)
+
+add_executable(global_path src/global_path.cpp)
+ament_target_dependencies(global_path rclcpp nav_msgs geometry_msgs visualization_msgs)
 
 add_executable(vehicle_info test/vehicle_info.cpp)
-ament_target_dependencies(control_algorithm rclcpp yaml-cpp)
+ament_target_dependencies(vehicle_info rclcpp)
 
 install(
   DIRECTORY urdf/
@@ -25,7 +31,7 @@ install(
 )
 
 install(
-  DIRECTORY config
+  DIRECTORY config/
   DESTINATION share/${PROJECT_NAME}/config
 )
 
@@ -37,6 +43,7 @@ install(
 install(TARGETS
   occupancy_map
   vehicle_info
+  global_path
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
