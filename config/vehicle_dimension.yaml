@@ -1,0 +1,37 @@
+robot_dimensions:
+  base:
+    length: 1.0           # Length of the base in meters
+    width: 0.6            # Width of the base in meters
+    height: 0.4           # Height of the base in meters
+
+  wheels:
+    radius: 0.1           # Radius of each wheel in meters
+    thickness: 0.04       # Thickness (length) of each wheel in meters
+    positions:
+      front_left:
+        x: 0.5            # X position of the front left wheel relative to base_link
+        y: 0.3            # Y position of the front left wheel relative to base_link
+        z: 0.0            # Z position of the front left wheel relative to base_link
+      front_right:
+        x: 0.5
+        y: -0.3
+        z: 0.0
+      rear_left:
+        x: -0.5
+        y: 0.3
+        z: 0.0
+      rear_right:
+        x: -0.5
+        y: -0.3
+        z: 0.0
+
+  wheelbase: 1.0          # Distance between front and rear axles in meters
+  track_width: 0.6        # Distance between left and right wheels in meters
+
+  camera:
+    height: 0.6           # Height of the camera above base_link
+    forward_offset: 0.5   # Forward offset of the camera from base_link
+
+  lidar:
+    height: 0.5           # Height of the lidar above base_link
+    forward_offset: 0.0   # Lidar is aligned with base_link
